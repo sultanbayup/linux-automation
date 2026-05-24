@@ -121,14 +121,17 @@ log "Writing dotfiles from repo..."
 
 backup_if_exists "$HOME/.zshrc"
 curl -fsSL "$REPO_RAW/.zshrc" -o "$HOME/.zshrc"
+sed -i 's/\r//' "$HOME/.zshrc"
 success "~/.zshrc written"
 
 backup_if_exists "$HOME/.zsh_aliases"
 curl -fsSL "$REPO_RAW/.zsh_aliases" -o "$HOME/.zsh_aliases"
+sed -i 's/\r//' "$HOME/.zsh_aliases"
 success "~/.zsh_aliases written"
 
 backup_if_exists "$HOME/.zsh_functions"
 curl -fsSL "$REPO_RAW/.zsh_functions" -o "$HOME/.zsh_functions"
+sed -i 's/\r//' "$HOME/.zsh_functions"
 success "~/.zsh_functions written"
 
 # ── Done ─────────────────────────────────────────────────────────────────────
