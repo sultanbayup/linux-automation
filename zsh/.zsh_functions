@@ -1,0 +1,98 @@
+# ── Kubernetes ───────────────────────────────────────────────
+
+# Switch namespace
+kns() {
+  kubectl config set-context --current --namespace="$1"
+  echo "Switched to namespace: $1"
+}
+
+# Tail logs by partial pod name
+klp() {
+  local pod
+  pod=$(kubectl get pods --no-headers | grep "$1" | awk '{print $1}' | head -1)
+  if [[ -z "$pod" ]]; then
+    echo "No pod found matching: $1"
+    return 1
+  fi
+  echo "Tailing logs for: $pod"
+  kubectl logs -f "$pod"
+}
+
+# Port-forward by partial pod name
+kpf() {
+  local pod
+  pod=$(kubectl get pods --no-headers | grep "$1" | awk '{print $1}' | head -1)
+  if [[ -z "$pod" ]]; then
+    echo "No pod found matching: $1"
+    return 1
+  fi
+  echo "Port-forwarding $pod → $2"
+  kubectl port-forward "$pod" "$2"
+}
+
+# fzf pod picker (used by klf-pick and kex-pick)
+kfzf() {
+  local pod
+  pod=$(kubectl get pods --no-headers | fzf --height=40% --reverse | awk '{print $1}')
+  [[ -n "$pod" ]] && echo "$pod"
+}
+
+# Tail logs with fzf pod picker
+klf-pick() {
+  local pod
+  pod=$(kfzf)
+  [[ -n "$pod" ]] && kubectl logs -f "$pod"
+}
+
+# Exec into pod with fzf picker
+kex-pick() {
+  local pod
+  pod=$(kfzf)
+  [[ -n "$pod" ]] && kubectl exec -it "$pod" -- /bin/sh
+}
+
+# ── Git ──────────────────────────────────────────────────────
+
+# Interactive branch switcher with fzf
+gbr() {
+  local branch
+  branch=$(git branch --all | grep -v HEAD | fzf --height=40% --reverse | sed 's/remotes\/origin\///' | xargs)
+  [[ -n "$branch" ]] && git checkout "$branch"
+}
+
+# ── System ───────────────────────────────────────────────────
+
+# Create directory and cd into it
+mkcd() {
+  mkdir -p "$1" && cd "$1"
+}
+
+# Extract any archive format
+extract() {
+  case "$1" in
+    *.tar.gz|*.tgz)   tar xzf "$1"   ;;
+    *.tar.bz2|*.tbz2) tar xjf "$1"   ;;
+    *.tar.xz)         tar xJf "$1"   ;;
+    *.tar)            tar xf "$1"    ;;
+    *.gz)             gunzip "$1"    ;;
+    *.bz2)            bunzip2 "$1"   ;;
+    *.zip)            unzip "$1"     ;;
+    *.7z)             7z x "$1"      ;;
+    *)                echo "Unknown archive format: $1" ;;
+  esac
+}
+
+# Interactive process killer with fzf
+fkill() {
+  local pid
+  pid=$(ps aux | fzf --height=40% --reverse --header-lines=1 | awk '{print $2}')
+  [[ -n "$pid" ]] && kill -9 "$pid" && echo "Killed PID $pid"
+}
+
+# ── GCP ──────────────────────────────────────────────────────
+
+# Switch GCP project
+gcpswitch() {
+  gcloud config set project "$1"
+  echo "Active project: $(gcloud config get-value project)"
+}
