@@ -39,4 +39,4 @@ chsh -s $(which zsh)
 p10k configure
 ```
 
-For full details → [sultanbp.com/docs/linux/zsh-setup-and-plugins](https://sultanbp.com/docs/linux/zsh-setup-and-plugins)
+For full details → [sultanbp.com/docs/linux/zsh-setup-and-plugins](https://sultanbp.com/docs/linux/zsh-setup-and-plugins/)
