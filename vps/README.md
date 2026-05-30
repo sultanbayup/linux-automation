@@ -1,27 +1,14 @@
 # vps/
 
-Scripts for VPS initial setup and hardening on Ubuntu/Debian.
+Scripts for VPS setup, hardening, and security auditing on Ubuntu/Debian.
 
 ---
 
 ## Scripts
 
-### `setup-vps.sh`
+| Script | What it does |
+|--------|-------------|
+| [`setup/setup-vps.sh`](setup/) | Full VPS setup — user, SSH hardening, UFW, Fail2ban, Docker |
+| [`audit/vps-audit.sh`](audit/) | Read-only security audit — color-coded report of misconfigurations |
 
-Full VPS setup in one command — creates a sudo user, hardens SSH, configures UFW firewall, installs Fail2ban, enables automatic security updates, installs Docker, and writes a custom MOTD.
-
-**Run as root on a fresh server:**
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/sultanbayup/linux-automation/main/vps/setup-vps.sh | bash
-```
-
-Or locally:
-
-```bash
-bash vps/setup-vps.sh
-```
-
-The script will prompt for username, hostname, and timezone before making any changes.
-
-For full details → [sultanbp.com/docs/linux/vps-setup-hardening](https://sultanbp.com/docs/linux/vps-setup-hardening)
+See the README in each subfolder for usage details.
